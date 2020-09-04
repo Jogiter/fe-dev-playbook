@@ -59,3 +59,30 @@ $ open. # 打开当前文件夹
 
 ![](https://img.alicdn.com/tfs/TB1AqoeXUH1gK0jSZSyXXXtlpXa-1224-398.png)
 
+# Mac 电脑初始化
+
++ [Mac 终端 oh-my-zsh 配置](https://www.jianshu.com/p/64344229778a)
+  + [theme: pure](https://github.com/sindresorhus/pure)
++ [vscode](https://code.visualstudio.com/docs/?dv=osx)
+  + [Settings Sync](https://code.visualstudio.com/docs/editor/settings-sync) 自动同步 vscode 的插件等设置。
+
+
+
+## Homebrew替代镜像源
+
+```sh
+# 进入 homebrew 根目录
+cd "$(brew --repo)"
+# 替换 brew 远程库
+git remote set-url origin git://mirrors.ustc.edu.cn/brew.git
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+# 替换 home-brew 远程库
+git remote set-url origin git://mirrors.ustc.edu.cn/homebrew-core.git
+# 更新 brew
+brew update
+```
+
+#### 国内源
+
++ 中科大: [https://mirrors.ustc.edu.cn/brew.git](https://links.jianshu.com/go?to=https%3A%2F%2Fmirrors.ustc.edu.cn%2Fbrew.git)
++ 清华大学: [https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/](
