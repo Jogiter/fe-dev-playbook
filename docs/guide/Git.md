@@ -4,6 +4,87 @@
 
 本篇文章将重点讲解大多数人忽略或者不清楚的点，注意: 这不是一篇大而全的git使用教程, 只会重点讲解一些关键知识点，如果你需要更全的git教程，你应该去查看[官方文档](https://git-scm.com/)
 
+## 管理多个 SSH Key
+
+### 生成并添加第一个ssh key
+
+第一次使用ssh生成key，默认会在用户~（根目录）下生成 id_rsa, id_rsa.pub 2个文件；所以需要添加多个ssh key时也会生成对应的私钥和公钥。
+
+```bash
+$ ssh-keygen -t rsa -C "youremail@yourcompany.com"
+```
+
+在Git Bash中执行这条命令一路回车，会在 ~/.ssh/ 目录下生成 id_rsa 和 id_rsa.pub 两个文件，用文本编辑器将 id_rsa_pub 中的内容复制一下粘贴到github(gitlab)上。
+
+### 生成并添加第二个ssh key
+
+```bash
+$ ssh-keygen -t rsa -C "youremail@gmail.com"
+```
+
+注意不要一路回车，要给这个文件起一个名字， 比如叫 id_rsa_github, 所以相应的也会生成一个 id_rsa_github.pub 文件。
+
+![img](https://images0.cnblogs.com/blog/282019/201409/091222268402433)
+
+目录结构如下：
+![img](https://images0.cnblogs.com/blog/282019/201409/091222046992263)
+
+### 添加私钥
+
+```bash
+$ ssh-add ~/.ssh/id_rsa
+$ ssh-add ~/.ssh/id_rsa_github
+```
+
+如果执行ssh-add时提示"Could not open a connection to your authentication agent"，可以现执行命令：
+
+```bash
+$ ssh-agent bash
+```
+
+然后再运行ssh-add命令。
+
+```bash
+# 可以通过 ssh-add -l 来确私钥列表
+$ ssh-add -l
+
+# 可以通过 ssh-add -D 来清空私钥列表
+$ ssh-add -D
+```
+
+### 修改配置文件
+
+在 ~/.ssh 目录下新建一个config文件
+
+```bash
+touch config
+```
+
+添加内容：
+
+```bash
+# gitlab
+Host gitlab.com
+    HostName gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa
+
+# github
+Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa_github
+```
+
+### 测试
+
+```bash
+$ ssh -T git@github.com
+```
+
+输出
+Hi user! You've successfully authenticated, but GitHub does not provide shell access. 就表示成功的连上github了
+
 ## 关联本地仓库与远程仓库
 
 大多数人都会使用 `git clone` 命令来将github上的代码仓库克隆到本地，然后做一些修改后就可以使用 `git push` 等命令来提交修改，但是这导致的问题就是大多数人对本地仓库和远程仓库是如何关联起来的不清楚，同时也不清楚有时候用到的 `origin` 这个究竟代表什么意思。下面我们从零来讲解如何将本地仓库和远程仓库关联。
